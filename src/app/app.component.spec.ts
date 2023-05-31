@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+//import * as entries from "../assets/json/entries";
 
 describe('AppComponent', () => {
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -20,10 +22,13 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'challenge-frontend-modyo'`, () => {
+  it(`should have all records images`, async () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('challenge-frontend-modyo');
+    fixture.detectChanges();
+
+    let imagesCards = fixture.nativeElement.querySelector('.card');
+
+    expect(imagesCards.length).toEqual(20);
   });
 
   it('should render title', () => {
