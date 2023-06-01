@@ -1,0 +1,27 @@
+<app-header></app-header>
+
+<form [formGroup]="loginForm" (ngSubmit)="signup()" class="ion-padding ">
+  <div class="grid content">
+    <div class="row">
+      <div class="col">
+        <div class="ion-margin-top label-float"
+          [class.invalid]="loginForm.controls['username'].dirty && loginForm.controls['username'].invalid">
+          <label>Username</label>
+          <input class="form-control" formControlName="username">
+        </div>
+        <label class="text-success">Wait before for comming set your username</label>
+
+      </div>
+    </div>
+
+    <div class="row pt-5">
+      <div class="col d-grid gap-2">
+        <button class="btn btn-primary btn-block" type="submit" [disabled]="loginForm.invalid==true">
+          Save Username
+        </button>
+      </div>
+    </div>
+
+
+  </div>
+</form>

@@ -2,13 +2,20 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.0.
 
+# Requirements
+
+ES2020 and nodejs 14.15. 0 or higher
+
+Check this with node `node -v` in you terminal
+Switch to branch main from git and make pull
+
+## instalation
+
+Run `npm install` or `yarn install` in you terminal
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
 
