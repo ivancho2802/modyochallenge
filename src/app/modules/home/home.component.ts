@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   unknown = "./assets/images/question.svg";
   toCompare: number | null = null
   disabledButton: boolean = false
-  messageWinner:string = ''
+  messageWinner: string = ''
 
   constructor(
     private router: Router,
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
 
   checkLoged() {
     let username = this.localService.getData('username')
-    console.log("username", username)
+
     if (!username) {
       this.router.navigateByUrl('/login', { replaceUrl: true })
       return;
@@ -57,18 +57,45 @@ export class HomeComponent implements OnInit {
 
       images = images.concat(myClonedArray);
 
-      this.images = this.shuffleArray(images)
+      this.images = this.shuffleArray(images);
+
+      this.validFinded();
 
     })
   }
 
-  getScores(){
+  validFinded(){
     
-    let success = this.localService.getData(this.username+'success'),
-    errors = this.localService.getData(this.username+'errors');
+    let imagesUUID: string | null = this.localService.getData(this.username + 'imagesUUID');
 
-    this.success = success ? parseFloat(success) : 0
-    this.errors = errors ? parseFloat(errors) : 0
+    let arrayUUIDFinded: string[] = []
+
+    if (imagesUUID !== 'undefined' && imagesUUID !== undefined  && imagesUUID !== null) {
+      arrayUUIDFinded = JSON.parse(imagesUUID)
+    }
+
+    //set old finded
+    for (const UUID of arrayUUIDFinded) {
+
+      this.images.map(el=>{
+        if(el.meta.uuid === UUID){
+          el.finded = true
+        }
+        return el
+      })
+
+    }
+
+    this.validWinner()
+  }
+
+  getScores() {
+
+    let success = this.localService.getData(this.username + 'success'),
+      errors = this.localService.getData(this.username + 'errors');
+
+    this.success = success ? parseFloat(success) : 0;
+    this.errors = errors ? parseFloat(errors) : 0;
 
   }
 
@@ -77,7 +104,7 @@ export class HomeComponent implements OnInit {
    * @param inputArray:IEntries is the all entries for shuffles and have a order diff 
    * @returns IEntries entries with the disorder aplicated
    */
-  shuffleArray(inputArray:IEntries[]) {
+  shuffleArray(inputArray: IEntries[]) {
     inputArray.sort(() => Math.random() - 0.5);
     return inputArray
   }
@@ -119,6 +146,7 @@ export class HomeComponent implements OnInit {
         this.images[index].finded = true
         this.images[this.toCompare].finded = true
 
+        this.toCompare = null
         this.makeLoad(true)
 
       } else {
@@ -132,19 +160,23 @@ export class HomeComponent implements OnInit {
 
   }
 
-  makeLoad(operation:boolean){
-    if(operation === true){
+  makeLoad(operation: boolean) {
+    if (operation === true) {
       this.success++;
-      this.localService.saveData(this.username+'success', JSON.stringify(this.success));
+      let arrayUUIDFinded = this.getImagesFinded();
+      this.localService.saveData(this.username + 'success', JSON.stringify(this.success));
+      this.localService.saveData(this.username + 'imagesUUID', JSON.stringify(arrayUUIDFinded));
       this.validWinner()
-    }else{
+    } else {
       this.errors++;
-      this.localService.saveData(this.username+'errors', JSON.stringify(this.errors))
+      this.localService.saveData(this.username + 'errors', JSON.stringify(this.errors))
     }
   }
 
-  validWinner(){
-    if(this.success == this.images.length/2){
+  validWinner() {
+    console.log(this.success)
+    console.log(this.images.length / 2)
+    if (this.success >= this.images.length / 2) {
       this.messageWinner = "Congratulation " + this.username + " you are Winner, you have the best memory you are asome"
     }
   }
@@ -159,6 +191,16 @@ export class HomeComponent implements OnInit {
       }
       return el;
     })
+  }
+
+  getImagesFinded() {
+    let arrayUUIDFinded: string[] = []
+    this.images.forEach(el => {
+      if (el.finded) {
+        arrayUUIDFinded.push(el.meta.uuid)
+      }
+    })
+    return arrayUUIDFinded
   }
 
 }
